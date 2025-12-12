@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact | ESSIZ OMEGA DRIFT</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .contact-section {
+      max-width: 700px;
+      margin: 60px auto;
+      padding: 24px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .contact-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      color: var(--accent);
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .contact-section p {
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      line-height: 1.8;
+      color: var(--text);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    input, textarea {
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      background: #0b0f1a;
+      color: var(--accent);
+    }
+    textarea { height: 150px; }
+    button {
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .contact-info {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 16px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <div class="brand">ESSIZ OMEGA DRIFT</div>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="poetry.html">Poetry</a>
+        <a href="syntax.html">Syntax</a>
+        <a href="about.html">About</a>
+        <a href="contact.html" class="active">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Contact Section -->
+  <section class="contact-section">
+    <h2>Contact Us</h2>
+    <p>Have feedback, ideas, or just want to say hello? Reach out below.</p>
+    <form action="https://formspree.io/f/mdkrypzp" method="POST">
+  <input type="text" name="name" placeholder="Your Name" required>
+  <input type="email" name="email" placeholder="Your Email" required>
+  <textarea name="message" placeholder="Your Message" required></textarea>
+  <button type="submit">Send Message</button>
+  <input type="text" name="_gotcha" style="display:none">
+</form>
+<form action="https://formspree.io/f/mdkrypzp" method="POST">
+  ...
+  <input type="hidden" name="_next" value="https://yourwebsite.com/thankyou.html">
+</form>
+    <div class="contact-info">
+      <p>Email: <a href="mailto:essyart.essizverses1@gmail.com">essyart.essizverses1@gmail.com</a></p>
+      
+
+      <p>Follow us on GitHub: <a href="https://github.com/muleiesther8" target="_blank">muleiesther8</a></p>
+    </div>
+  </section>
+
+  <footer>
+    © 2025 ESSIZ OMEGA DRIFT. All rights reserved.
+  </footer>
+</body>
+</html>

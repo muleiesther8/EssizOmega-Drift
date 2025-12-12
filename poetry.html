@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Poetry | ESSIZ OMEGA DRIFT</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Fira+Code:wght@400;500&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .poetry-editor {
+      max-width: 720px;
+      margin: 40px auto;
+      background: var(--surface);
+      padding: 24px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    textarea {
+      width: 100%;
+      height: 160px;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'Fira Code', monospace;
+      font-size: 16px;
+      background: #0b0f1a;
+      color: var(--text);
+    }
+
+    /* poem display - preserve newlines */
+    .poem-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      line-height: 1.6;
+      white-space: pre-wrap; /* keeps line breaks and wraps long lines */
+      color: var(--text);
+    }
+    button {
+      margin-top: 12px;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .save-btn { background: var(--accent); color: #fff; }
+    .poem-list { margin-top: 32px; }
+    .poem-item {
+      background: #111827;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+    .poem-actions button {
+      margin-right: 8px;
+      font-size: 14px;
+      padding: 6px 12px;
+    }
+    .edit-btn { background: var(--primary); color: #fff; }
+    .delete-btn { background: #ef4444; color: #fff; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <div class="brand">ESSIZ OMEGA DRIFT</div>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="poetry.html" class="active">Poetry</a>
+        <a href="syntax.html">Syntax</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="poetry-editor">
+    <h2>Write a New Poem</h2>
+    <input id="poemTitle" placeholder="Title (optional)" style="width:100%; padding:8px 12px; border-radius:8px; border:none; margin-bottom:8px; font-family:'Playfair Display',serif; font-size:18px; background:#0b0f1a; color:var(--text);" />
+    <textarea id="poemInput" placeholder="Compose your cosmic verse here..."></textarea>
+    <button class="save-btn" onclick="savePoem()">Save Poem</button>
+  </section>
+
+  <section class="poem-list">
+    <h2>My Poems</h2>
+    <div id="poemsContainer"></div>
+  </section>
+
+  <!-- Edit modal -->
+  <div id="editModal" class="modal" aria-hidden="true" style="display:none;">
+    <div class="modal-content" style="max-width:800px; margin:6rem auto; background:var(--surface); padding:16px; border-radius:12px; border:1px solid rgba(255,255,255,0.06);">
+      <h3>Edit Poem</h3>
+      <input id="editTitle" placeholder="Title (optional)" style="width:100%; padding:8px 12px; border-radius:8px; border:none; margin-bottom:8px; font-family:'Playfair Display',serif; font-size:18px; background:#0b0f1a; color:var(--text);" />
+      <textarea id="editTextarea" style="width:100%; height:200px; margin-top:8px; padding:12px; font-family:'Fira Code',monospace; background:#0b0f1a; color:var(--text); border-radius:8px;"></textarea>
+      <div style="margin-top:8px; text-align:right;">
+        <button id="cancelEditBtn" style="margin-right:8px; padding:8px 12px; border-radius:8px;">Cancel</button>
+        <button id="saveEditBtn" class="edit-btn" style="padding:8px 12px; border-radius:8px;">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 ESSIZ OMEGA DRIFT. All rights reserved.
+  </footer>
+
+  <script>
+    // Load existing poems, normalizing strings to objects for backward compatibility
+    let poems = JSON.parse(localStorage.getItem("poems")) || [];
+    poems = poems.map(p => typeof p === 'string' ? { title: '', body: p, createdAt: new Date().toISOString() } : p);
+    // expose to window for other scripts
+    window.poems = poems;
+
+    function renderPoems() {
+      const container = document.getElementById("poemsContainer");
+      container.innerHTML = "";
+      poems.forEach((poem, index) => {
+        const div = document.createElement("div");
+        div.className = "poem-item";
+
+        // handle both object and string formats
+        const poemObj = (typeof poem === 'string') ? { title: '', body: poem, createdAt: new Date().toISOString() } : poem;
+        const p = document.createElement('p');
+        p.className = 'poem-text';
+        p.textContent = poemObj.body;
+        div.appendChild(p);
+
+        // show title and date if present
+        if (poemObj.title) {
+          const h3 = document.createElement('h3');
+          h3.className = 'poem-title';
+          h3.textContent = poemObj.title;
+          div.insertBefore(h3, p);
+        }
+        const dateSpan = document.createElement('div');
+        dateSpan.className = 'poem-date';
+        if (poemObj.createdAt) {
+          const d = new Date(poemObj.createdAt);
+          dateSpan.textContent = d.toLocaleString();
+          // place date under title or above poem
+          if (poemObj.title) div.insertBefore(dateSpan, p);
+          else div.insertBefore(dateSpan, p);
+        }
+
+        // actions
+        const actions = document.createElement('div');
+        actions.className = 'poem-actions';
+        actions.innerHTML = `
+          <button class="edit-btn" onclick="editPoem(${index})">Edit</button>
+          <button class="delete-btn" onclick="deletePoem(${index})">Delete</button>
+        `;
+        div.appendChild(actions);
+
+        container.appendChild(div);
+      });
+    }
+
+    function savePoem() {
+      const input = document.getElementById("poemInput");
+      const titleInput = document.getElementById('poemTitle');
+      if (input.value.trim() !== "") {
+        const poemObj = {
+          title: titleInput.value.trim(),
+          body: input.value,
+          createdAt: new Date().toISOString()
+        };
+        poems.push(poemObj);
+        localStorage.setItem("poems", JSON.stringify(poems));
+        input.value = "";
+        titleInput.value = "";
+        renderPoems();
+      }
+}
+
+// Provide a textarea modal for editing multi-line poems (preserves formatting)
+    let editingIndex = null;
+    const editModal = document.getElementById('editModal');
+    const editTextarea = document.getElementById('editTextarea');
+    const saveEditBtn = document.getElementById('saveEditBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+
+    function openEditModal(index) {
+      editingIndex = index;
+      const poemObj = poems[index] || { title: '', body: '' };
+      editTextarea.value = poemObj.body || "";
+      document.getElementById('editTitle').value = poemObj.title || "";
+      editModal.style.display = 'block';
+      editModal.setAttribute('aria-hidden', 'false');
+      editTextarea.focus();
+    }
+
+    function closeEditModal() {
+      editingIndex = null;
+      editModal.style.display = 'none';
+      editModal.setAttribute('aria-hidden', 'true');
+      editTextarea.value = '';
+    }
+
+    // Replace old editPoem prompt with modal open
+    function editPoem(index) {
+      openEditModal(index);
+    }
+
+    // Save button handler
+    saveEditBtn.addEventListener('click', () => {
+      if (editingIndex !== null) {
+        const newTitle = document.getElementById('editTitle').value.trim();
+        const newBody = editTextarea.value;
+        const old = poems[editingIndex] || {};
+        poems[editingIndex] = {
+          title: newTitle,
+          body: newBody,
+          createdAt: old.createdAt || new Date().toISOString()
+        };
+        localStorage.setItem('poems', JSON.stringify(poems));
+        renderPoems();
+        closeEditModal();
+      }
+    });
+
+    // Cancel button handler
+    cancelEditBtn.addEventListener('click', () => {
+      closeEditModal();
+    });
+
+    // Close modal on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && editModal.style.display === 'block') {
+        closeEditModal();
+      }
+    });
+
+    function deletePoem(index) {
+      poems.splice(index, 1);
+      localStorage.setItem("poems", JSON.stringify(poems));
+      renderPoems();
+    }
+
+    // Initial render
+    renderPoems();
+  </script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Syntax | ESSIZ OMEGA DRIFT</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Fira+Code:wght@400;500&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .syntax-editor {
+      max-width: 720px;
+      margin: 40px auto;
+      background: var(--surface);
+      padding: 24px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    input, textarea {
+      width: 100%;
+      margin-bottom: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'Fira Code', monospace;
+      font-size: 15px;
+      background: #0b0f1a;
+      color: var(--accent);
+    }
+    textarea { height: 200px; }
+    button {
+      margin-top: 8px;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .save-btn { background: var(--accent); color: #fff; }
+    .run-btn { background: var(--primary); color: #fff; }
+    .snippet-list { max-width: 720px; margin: 40px auto; }
+    .snippet-item {
+      background: #111827;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+    .snippet-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .snippet-text {
+      font-family: 'Fira Code', monospace;
+      font-size: 15px;
+      line-height: 1.6;
+      white-space: pre-wrap; /* ✅ keeps code formatting */
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .snippet-date {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+    .snippet-actions button {
+      margin-right: 8px;
+      font-size: 14px;
+      padding: 6px 12px;
+    }
+    .edit-btn { background: var(--primary); color: #fff; }
+    .delete-btn { background: #ef4444; color: #fff; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <div class="brand">ESSIZ OMEGA DRIFT</div>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="poetry.html">Poetry</a>
+        <a href="syntax.html" class="active">Syntax</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Syntax Editor -->
+  <section class="syntax-editor">
+    <h2>Syntax Playground</h2>
+    <input id="snippetTitle" type="text" placeholder="Snippet Title (e.g., Loop Example)">
+    <textarea id="syntaxInput" placeholder="Type your code snippet here..."></textarea>
+    <button class="save-btn" onclick="saveSnippet()">Save Snippet</button>
+    <button class="run-btn" onclick="runSyntax()">Run</button>
+    <div id="syntaxOutput" class="snippet-text"></div>
+  </section>
+
+  <!-- Saved Snippets -->
+  <section class="snippet-list">
+    <h2>My Snippets</h2>
+    <div id="snippetsContainer"></div>
+  </section>
+
+  <footer>
+    © 2025 ESSIZ OMEGA DRIFT. All rights reserved.
+  </footer>
+
+  <script>
+  let snippets = JSON.parse(localStorage.getItem("snippets")) || [];
+
+  function renderSnippets() {
+    const container = document.getElementById("snippetsContainer");
+    container.innerHTML = "";
+    snippets.forEach((snippet, index) => {
+      const div = document.createElement("div");
+      div.className = "snippet-item";
+      div.innerHTML = `
+        <div class="snippet-title">${snippet.title}</div>
+        <div class="snippet-text">${snippet.text}</div>
+        <div class="snippet-date">Saved on ${snippet.date}</div>
+        <div class="snippet-actions">
+          <button class="edit-btn" onclick="editSnippet(${index})">Edit</button>
+          <button class="delete-btn" onclick="deleteSnippet(${index})">Delete</button>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  function saveSnippet() {
+    const titleInput = document.getElementById("snippetTitle");
+    const textInput = document.getElementById("syntaxInput");
+    if (titleInput.value.trim() !== "" && textInput.value.trim() !== "") {
+      const date = new Date().toLocaleDateString();
+      snippets.push({ 
+        title: titleInput.value.trim(), 
+        text: textInput.value.trim(), 
+        date: date 
+      });
+      localStorage.setItem("snippets", JSON.stringify(snippets));
+      titleInput.value = "";
+      textInput.value = "";
+      renderSnippets();
+    } else {
+      alert("Please enter both a title and code before saving.");
+    }
+  }
+
+  function editSnippet(index) {
+    const newTitle = prompt("Edit snippet title:", snippets[index].title);
+    const newText = prompt("Edit snippet text:", snippets[index].text);
+    if (newTitle !== null && newText !== null) {
+      snippets[index].title = newTitle.trim();
+      snippets[index].text = newText.trim();
+      localStorage.setItem("snippets", JSON.stringify(snippets));
+      renderSnippets();
+    }
+  }
+
+  function deleteSnippet(index) {
+    snippets.splice(index, 1);
+    localStorage.setItem("snippets", JSON.stringify(snippets));
+    renderSnippets();
+  }
+
+  function runSyntax() {
+    const input = document.getElementById("syntaxInput").value;
+    const outputDiv = document.getElementById("syntaxOutput");
+    if (input.trim() !== "") {
+      outputDiv.textContent = ">> Output:\n" + input;
+    } else {
+      outputDiv.textContent = "No syntax entered.";
+    }
+  }
+
+  // Initial render
+  renderSnippets();
+  function runSyntax() {
+  const input = document.getElementById("syntaxInput").value;
+  const outputDiv = document.getElementById("syntaxOutput");
+
+  try {
+    // Capture console.log output
+    let logs = [];
+    const originalLog = console.log;
+    console.log = function(...args) {
+      logs.push(args.join(" "));
+      originalLog.apply(console, args);
+    };
+
+    eval(input); // ⚠️ runs the code typed in the textarea
+
+    console.log = originalLog; // restore console.log
+    outputDiv.textContent = ">> Output:\n" + logs.join("\n");
+  } catch (err) {
+    outputDiv.textContent = "Error: " + err.message;
+  }
+}
+</script>
