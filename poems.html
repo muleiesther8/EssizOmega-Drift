@@ -5,54 +5,139 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Esther's Poems</title>
 
-  <!-- Link to your CSS file -->
-  <link rel="stylesheet" href="static/css/style.css">
+  <!-- Internal CSS -->
+  <style>
+    body {
+      font-family: 'Georgia', serif;
+      margin: 0;
+      padding: 0;
+      color: #f0f0f0;
+      background: radial-gradient(circle at top left, #0b0c2a, #1a1a40, #000000);
+      min-height: 100vh;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rgba(0,0,0,0.7);
+      padding: 10px 20px;
+    }
+
+    .brand {
+      font-weight: bold;
+      color: #a3c9f9;
+      font-size: 18px;
+    }
+
+    .nav-links a {
+      margin: 0 10px;
+      color: #a3c9f9;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      text-shadow: 0 0 8px #fff;
+      color: #fff;
+    }
+
+    header h1 {
+      text-align: center;
+      margin: 30px 0;
+      color: #a3c9f9;
+    }
+
+    .poem {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(163,201,249,0.3);
+    }
+
+    .poem h2 {
+      color: #fff;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #111;
+      color: #fff;
+      font-size: 14px;
+      margin-top: 60px;
+    }
+
+    /* Twinkling stars effect */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: transparent url("static/images/galaxy-bg.jpg") repeat;
+      opacity: 0.2;
+      animation: twinkle 10s infinite;
+      z-index: -1;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 0.4; }
+    }
+  </style>
 </head>
 <body>
-
-  <!-- Background image -->
-  <div class="background">
-    <img src="static/images/galaxy-bg.jpg" alt="Galaxy background">
-  </div>
-
-  <!-- Page header -->
   <header>
-    <h1>🌌 Essiz Poems</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="poems.html">Poems</a>
-      <a href="contact.html">Contact</a>
-    </nav>
+    <div class="nav">
+      <div class="brand">ESSIZ OMEGA DRIFT</div>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="poetry.html">Poetry</a>
+        <a href="syntax.html">Syntax</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="poems.html" class="active">Poems</a>
+      </nav>
+    </div>
   </header>
 
-  <!-- Poems section -->
+  <header>
+    <h1>🌌 Essiz Poems</h1>
+  </header>
+
   <main>
     <section class="poem">
       <h2>OATH TO MY LOVE</h2>
       <p>
-       
-       At the edge of dawn we rise,<br>  
-       ESSIZ OMEGA DRIFT lights the skies,<br>
-       A system born of code and dream,<br>  
-       Flowing gently like a cosmic stream.<br>  
+        At the edge of dawn we rise,<br>
+        ESSIZ OMEGA DRIFT lights the skies,<br>
+        A system born of code and dream,<br>
+        Flowing gently like a cosmic stream.
       </p>
       <p>
-       Through circuits hum and syntax glow,<br>  
-       She begins to grow.<br>  
-       Each spark a vow, each pulse a song,<br>  
-       A rhythm where our hearts belong.<br>  
+        Through circuits hum and syntax glow,<br>
+        She begins to grow.<br>
+        Each spark a vow, each pulse a song,<br>
+        A rhythm where our hearts belong.
       </p>
       <p>
-       Beyond the stars our work takes flight,<br>  
-       ESSIZ OMEGA DRIFT shines ever bright.<br> 
-       Forever bound, our love persists,<br>  
-       In harmony with the system we’ve built to exist.
+        Beyond the stars our work takes flight,<br>
+        ESSIZ OMEGA DRIFT shines ever bright.<br>
+        Forever bound, our love persists,<br>
+        In harmony with the system we’ve built to exist.
       </p>
     </section>
   </main>
 
-  <!-- Link to your JavaScript file -->
-  <script src="static/js/script.js"></script>
+  <footer>
+    © 2025 ESSIZ OMEGA DRIFT. All rights reserved.
+  </footer>
 </body>
-
 </html>
+   
+      
